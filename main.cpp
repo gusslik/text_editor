@@ -18,7 +18,8 @@ void enableRawMode()
 
     tcgetattr(STDIN_FILENO, &raw);
 
-    raw.c_lflag &= ~(ECHO);
+    raw.c_iflag &= ~(IXON | ICRNL);
+    raw.c_lflag &= ~(ECHO | ICANON | ISIG | IEXTEN);
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 
@@ -33,6 +34,12 @@ int main()
     while (c != 'q')
     {
         c = getchar();
+        if(iscntrl(int(c))){
+            std::cout << int(c) << "\n";
+        }
+        else{
+            std::cout << int(c) << " : " << c << "\n";
+        }
     }
 
     return 0;
